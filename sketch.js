@@ -25,20 +25,21 @@ planned features
     reset button
     bottom line indicating total progress. 100% on right
     start typing animation: rectangle + bounce
+    tracking wpm
+    last word wpm
     wpm and accuracy counter on bottom
     scrolling text passage? before that we limit to screen size
     scoring animation, maybe with camera. viewport
         viewport https://forum.processing.org/two/discussion/14992/how-to-move-the-view-without-camera
         cameras https://behreajj.medium.com/cameras-in-processing-2d-and-3d-dc45fd03662c
 
-TODO bug where first key is not recognized and highlights do not begin
  */
 
 
 let font
 let passage
-let correctSound
-let incorrectSound
+let correctSound // audio cue for typing one char correctly
+let incorrectSound // audio cue for typing one char incorrectly
 
 
 function preload() {
@@ -79,7 +80,7 @@ function keyPressed() {
         passage.setCorrect(). otherwise, play and rewind incorrect sound.
         passage.setIncorrect().
      */
-    console.log(key)
+
     if (passage.getCurrentChar() === key) {
         passage.setCorrect()
         correctSound.play()

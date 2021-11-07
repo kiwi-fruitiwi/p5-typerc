@@ -20,13 +20,24 @@ class Passage {
 
     render() {
         noStroke()
-        let H_OFFSET = 50
+        const H_OFFSET = 50
+        const CORRECT_HIGHLIGHT_HEIGHT = 34
+        const BELOW_FLOOR_CHAR_PADDING = 8 // for tails of p's, g's, y's, etc.
+        let V_OFFSET = 100
 
         // display characters in passage and highlight for correct vs incorrect
         for (let i=0; i < this.text.length; i++) {
             fill(0, 0, 100, 70)
-            text(this.text[i], H_OFFSET+this.textWidth*i, 100)
 
+            /*  TODO multi-line check
+                find next word. if that word's width plus our current pos.x
+                 is greater than our screen, V_OFFSET += line height
+
+             */
+
+            text(this.text[i], H_OFFSET+this.textWidth*i, V_OFFSET)
+
+            /* TODO correct / incorrect highlights */
 
             /*  if we've typed up to the current char:
                     display a green rect background if we typed it correctly
@@ -37,32 +48,41 @@ class Passage {
                     fill(94, 100, 90, 15)
                 else
                     fill(0, 100, 100, 20)
-                rect(
-                    H_OFFSET+this.textWidth*i+1, 100+10,
-                    this.textWidth-2, -46, 2)
+                rect( // negative height makes rectangle grow upward on screen
+                    H_OFFSET+this.textWidth*i+1,
+                    V_OFFSET+BELOW_FLOOR_CHAR_PADDING,
+                    this.textWidth-2,
+                    -CORRECT_HIGHLIGHT_HEIGHT,
+                    2) // rounded rectangle corners
             } else {
                 // don't draw a rect background if we haven't typed up to
                 // this index
             }
         }
 
-        // display cursor
-        fill(216, 100, 100, 50) // blue
+
+        /* TODO display underline cursor for current character */
+        fill(0, 0, 100)
         rect(
-            H_OFFSET+self.textWidth*self.index+1, 100+10,
-            self.textWidth-2, 2,
+            H_OFFSET+this.textWidth*this.index+1, V_OFFSET+10,
+            this.textWidth-2, 2,
             2)
 
-        // display line above current word (delimited by whitespace)
+
+        /* TODO line above current word (delimited by whitespace) */
         // find index of next and previous whitespace chars
         let nextDelimiterIndex = this.text.indexOf(" ", this.index)
         let previousDelimiterIndex = this.text.lastIndexOf(" ", this.index)
 
         // +1 because we don't want the line to go over the previous
         // whitespace char
+        // fill(216, 100, 100, 50) // blue
+        fill(0, 0, 80, 30) // gray
         rect(
-            H_OFFSET+this.textWidth*(previousDelimiterIndex+1)+1, 66-6,
-            this.textWidth*(nextDelimiterIndex-previousDelimiterIndex)-2, 2,
+            H_OFFSET+this.textWidth*(previousDelimiterIndex+1)+1,
+            V_OFFSET+BELOW_FLOOR_CHAR_PADDING-CORRECT_HIGHLIGHT_HEIGHT-2,
+            this.textWidth*(nextDelimiterIndex-previousDelimiterIndex),
+            -2,
             2)  // rounded rect corners
 
     }
