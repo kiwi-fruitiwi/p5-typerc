@@ -19,9 +19,7 @@ class Passage {
     }
 
     render() {
-        fill(0, 100, 0, 80)
         noStroke()
-
         let H_OFFSET = 50
 
         // display characters in passage and highlight for correct vs incorrect
@@ -40,7 +38,7 @@ class Passage {
                 else
                     fill(0, 100, 100, 20)
                 rect(
-                    H_OFFSET+this.textWidth*i+2, 100+10,
+                    H_OFFSET+this.textWidth*i+1, 100+10,
                     this.textWidth-2, -46, 2)
             } else {
                 // don't draw a rect background if we haven't typed up to

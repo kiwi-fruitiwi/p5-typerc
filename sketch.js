@@ -31,6 +31,7 @@ planned features
         viewport https://forum.processing.org/two/discussion/14992/how-to-move-the-view-without-camera
         cameras https://behreajj.medium.com/cameras-in-processing-2d-and-3d-dc45fd03662c
 
+TODO bug where first key is not recognized and highlights do not begin
  */
 
 
@@ -48,7 +49,7 @@ function preload() {
 function setup() {
     createCanvas(640, 360)
     colorMode(HSB, 360, 100, 100, 100)
-    textFont(font, 32)
+    textFont(font, 24)
 
     correctSound = loadSound('data/correct.wav')
     incorrectSound = loadSound('data/incorrect.wav')
@@ -71,7 +72,6 @@ function keyPressed() {
 
     // don't do anything if we detect SHIFT ALT CONTROL keycodes
     if (keyCode === SHIFT || keyCode === ALT || keyCode === CONTROL) {
-        console.log("modifier key " + keyCode + " ignored.")
         return
     }
 
@@ -87,11 +87,4 @@ function keyPressed() {
         passage.setIncorrect()
         incorrectSound.play()
     }
-
-    // console.log(passage)
-    console.log(passage.index)
-}
-
-function mousePressed() {
-    noLoop()
 }
