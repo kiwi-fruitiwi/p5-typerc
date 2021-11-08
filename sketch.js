@@ -65,6 +65,7 @@ function draw() {
     background(234, 34, 24)
 
     passage.render()
+    text("impasse", 0, 0)
 }
 
 function keyPressed() {
