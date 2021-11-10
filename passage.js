@@ -1,6 +1,9 @@
 /*
     displays a passage for typing, keeping track of correct and incorrect
-     letters by highlighting them
+    letters by highlighting them
+
+    TODO
+        block on incorrect characters until correct one is entered
  */
 
 class Passage {
@@ -13,8 +16,11 @@ class Passage {
 
         /*  keep track of where we last got a character incorrect; use this
          to prevent marking a previously incorrect char correct once we succeed.
+         TODO this currently does not work because we skip incorrect chars :p
          */
         this.lastIncorrectIndex = -1
+
+        // TODO deprecate this after we deprecate the old render method
         this.textWidth = textWidth(' ') // the width of a space char
     }
 
@@ -23,7 +29,7 @@ class Passage {
     vectorRender() {
         noStroke()
 
-        let CHARACTER_POSITIONS = []
+        let CHAR_POS = []
 
         const TOP_MARGIN = 50
         const LEFT_MARGIN = 25
@@ -41,10 +47,7 @@ class Passage {
          */
         for (let i=0; i<this.text.length; i++) {
             // save the position of the ith character. we'll need this later
-            CHARACTER_POSITIONS.push(cursor.copy())
-
-            fill(0, 0, 100, 70)
-            text(this.text[i], cursor.x, cursor.y)
+            CHAR_POS.push(cursor.copy())
 
 
             /*  show the highlight box for correct vs incorrect after we type
@@ -69,6 +72,14 @@ class Passage {
                 // this index
             }
 
+
+            /*  draw the current letter above the highlight box
+             */
+            fill(0, 0, 100, 70)
+            text(this.text[i], cursor.x, cursor.y)
+
+
+
             /*  modify cursor position to where the next letter should be
                 each highlight box should be 1 pixel bigger on left and right
                 1+1=2 total pixels of extra width
@@ -81,6 +92,7 @@ class Passage {
             // this is the horizontal coordinate where we must text wrap
             const LINE_WRAP_X_POS = width - RIGHT_MARGIN
 
+            // do we exceed the line wrap limit? if so, next line!
             if (textWidth(this.text[i]) + cursor.x > LINE_WRAP_X_POS) {
                 cursor.y += HIGHLIGHT_BOX_HEIGHT + 5
 
@@ -93,7 +105,27 @@ class Passage {
 
         /*  add current word top highlight horizontal bar
          */
+        // find index of next and previous whitespace chars
 
+        // next delimiter index
+        let ndi = this.text.indexOf(" ", this.index)
+
+        // previous delimiter index
+        let pdi = this.text.lastIndexOf(" ", this.index)
+
+        // +1 because we don't want the line to go over the previous
+        // whitespace char
+        fill(0, 0, 80, 30) // gray
+
+
+        rect(
+            CHAR_POS[pdi+1].x, // start one char past the last delimiter
+            CHAR_POS[ndi].y - textAscent() - HIGHLIGHT_PADDING - 2,
+            // CHAR_POS[ndi].x - CHAR_POS[pdi].x
+            // this.textWidth*(ndi-pdi),
+            textWidth(this.text.substring(pdi+1, ndi+1)),
+            -2,
+            2)  // rounded rect corners
 
         /*  add cursor below current character
         */
@@ -101,8 +133,8 @@ class Passage {
 
         // TODO check if we're finished, otherwise we try to read [index+1]
         rect(
-            CHARACTER_POSITIONS[this.index].x,
-            CHARACTER_POSITIONS[this.index].y + textDescent(),
+            CHAR_POS[this.index].x,
+            CHAR_POS[this.index].y + textDescent(),
             textWidth(this.text[this.index]),
             2,
             2)
@@ -182,6 +214,7 @@ class Passage {
     }
 
     // set the current char to correct
+    // TODO block on errors not supported
     setCorrect() {
         // if we've already gotten this char incorrect, don't add a correct
         // value to correctList
@@ -196,6 +229,7 @@ class Passage {
     }
 
     // set the current char to be incorrect
+    // TODO block on errors not supported
     setIncorrect() {
         // only set incorrect for an index once!
         if (this.lastIncorrectIndex !== this.index) {
