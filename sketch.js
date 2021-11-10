@@ -50,7 +50,7 @@ function preload() {
 function setup() {
     createCanvas(640, 360)
     colorMode(HSB, 360, 100, 100, 100)
-    textFont(font, 24)
+    textFont(font, 32)
 
     correctSound = loadSound('data/correct.wav')
     incorrectSound = loadSound('data/incorrect.wav')
@@ -65,7 +65,6 @@ function draw() {
     background(234, 34, 24)
 
     passage.vectorRender()
-    text("impasse", 0, 0)
 }
 
 function keyPressed() {

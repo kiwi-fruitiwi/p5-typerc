@@ -21,10 +21,16 @@ class Passage {
 
     // renders this passage using vectors instead of constant offsets
     vectorRender() {
-        const Y_OFFSET = 100
-        const X_OFFSET = 50
+        noStroke()
+
+        const Y_OFFSET = 50
+        const X_OFFSET = 25
+        const HIGHLIGHT_PADDING = 5
+        const LEFT_PADDING = 1
+        const RIGHT_PADDING = 1
 
         let cursor = new p5.Vector(X_OFFSET, Y_OFFSET)
+        let highlightTopLeftCorner = new p5.Vector()
 
         // display the entire passage without text wrap
         for (let i=0; i<this.text.length; i++) {
@@ -33,8 +39,37 @@ class Passage {
             text(this.text[i], cursor.x, cursor.y)
 
 
-            // modify cursor position to where the next letter should be
-            cursor.x += textWidth(this.text[i])
+            // show the highlight box for correct vs incorrect after we type
+            if (i < this.index) {
+                if (this.correctList[i])
+                    fill(94, 100, 90, 15)
+                else
+                    fill(0, 100, 100, 20)
+
+                highlightTopLeftCorner.x = cursor.x
+                highlightTopLeftCorner.y = cursor.y - textAscent()
+
+                rect(
+                    highlightTopLeftCorner.x,
+                    highlightTopLeftCorner.y - HIGHLIGHT_PADDING,
+                    textWidth(this.text[i]),
+                    textAscent() + textDescent() + 2*HIGHLIGHT_PADDING,
+                    2) // rounded rectangle corners
+            } else {
+                // don't draw a rect background if we haven't typed up to
+                // this index
+            }
+
+
+
+
+
+
+            /*  modify cursor position to where the next letter should be
+                each highlight box should be 1 pixel bigger on left and right
+                1+1=2 total pixels of extra width
+             */
+            cursor.x += textWidth(this.text[i]) + 2
         }
     }
 
