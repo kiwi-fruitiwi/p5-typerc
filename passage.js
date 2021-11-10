@@ -18,6 +18,26 @@ class Passage {
         this.textWidth = textWidth(' ') // the width of a space char
     }
 
+
+    // renders this passage using vectors instead of constant offsets
+    vectorRender() {
+        const Y_OFFSET = 100
+        const X_OFFSET = 50
+
+        let cursor = new p5.Vector(X_OFFSET, Y_OFFSET)
+
+        // display the entire passage without text wrap
+        for (let i=0; i<this.text.length; i++) {
+
+            fill(0, 0, 100, 70)
+            text(this.text[i], cursor.x, cursor.y)
+
+
+            // modify cursor position to where the next letter should be
+            cursor.x += textWidth(this.text[i])
+        }
+    }
+
     render() {
         noStroke()
         const H_OFFSET = 50

@@ -64,7 +64,7 @@ function setup() {
 function draw() {
     background(234, 34, 24)
 
-    passage.render()
+    passage.vectorRender()
     text("impasse", 0, 0)
 }
 
