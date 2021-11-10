@@ -23,23 +23,32 @@ class Passage {
     vectorRender() {
         noStroke()
 
-        const Y_OFFSET = 50
-        const X_OFFSET = 25
+        let CHARACTER_POSITIONS = []
+
+        const TOP_MARGIN = 50
+        const LEFT_MARGIN = 25
+        const RIGHT_MARGIN = LEFT_MARGIN
         const HIGHLIGHT_PADDING = 5
-        const LEFT_PADDING = 1
-        const RIGHT_PADDING = 1
 
-        let cursor = new p5.Vector(X_OFFSET, Y_OFFSET)
+        // the bottom left corner of the current letter we are typing = cursor
+        let cursor = new p5.Vector(LEFT_MARGIN, TOP_MARGIN)
+
         let highlightTopLeftCorner = new p5.Vector()
+        const HIGHLIGHT_BOX_HEIGHT = textAscent() + textDescent() +
+                2*HIGHLIGHT_PADDING
 
-        // display the entire passage without text wrap
+        /*  display the entire passage without text wrap
+         */
         for (let i=0; i<this.text.length; i++) {
+            // save the position of the ith character. we'll need this later
+            CHARACTER_POSITIONS.push(cursor.copy())
 
             fill(0, 0, 100, 70)
             text(this.text[i], cursor.x, cursor.y)
 
 
-            // show the highlight box for correct vs incorrect after we type
+            /*  show the highlight box for correct vs incorrect after we type
+             */
             if (i < this.index) {
                 if (this.correctList[i])
                     fill(94, 100, 90, 15)
@@ -53,24 +62,50 @@ class Passage {
                     highlightTopLeftCorner.x,
                     highlightTopLeftCorner.y - HIGHLIGHT_PADDING,
                     textWidth(this.text[i]),
-                    textAscent() + textDescent() + 2*HIGHLIGHT_PADDING,
+                    HIGHLIGHT_BOX_HEIGHT,
                     2) // rounded rectangle corners
             } else {
                 // don't draw a rect background if we haven't typed up to
                 // this index
             }
 
-
-
-
-
-
             /*  modify cursor position to where the next letter should be
                 each highlight box should be 1 pixel bigger on left and right
                 1+1=2 total pixels of extra width
              */
-            cursor.x += textWidth(this.text[i]) + 2
+            cursor.x += textWidth(this.text[i]) + 2 // 2 = HORIZONTAL_PADDING
+
+            /*  let's do a simple word wrap, wrapping just by character!
+             */
+
+            // this is the horizontal coordinate where we must text wrap
+            const LINE_WRAP_X_POS = width - RIGHT_MARGIN
+
+            if (textWidth(this.text[i]) + cursor.x > LINE_WRAP_X_POS) {
+                cursor.y += HIGHLIGHT_BOX_HEIGHT + 5
+
+                // don't forget to wrap the x coordinates! ᴖᴥᴖ
+                cursor.x = LEFT_MARGIN
+            }
         }
+
+
+
+        /*  add current word top highlight horizontal bar
+         */
+
+
+        /*  add cursor below current character
+        */
+        fill(0, 0, 100)
+
+        // TODO check if we're finished, otherwise we try to read [index+1]
+        rect(
+            CHARACTER_POSITIONS[this.index].x,
+            CHARACTER_POSITIONS[this.index].y + textDescent(),
+            textWidth(this.text[this.index]),
+            2,
+            2)
     }
 
     render() {
