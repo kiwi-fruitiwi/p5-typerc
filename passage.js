@@ -8,8 +8,6 @@
 
 class Passage {
     constructor(text) {
-        // set up our font so we can determine our text width
-
         this.text = text
         this.index = 0 // where in the passage we're currently typing
         this.correctList = [] // booleans recording character correctness
@@ -19,14 +17,11 @@ class Passage {
          TODO this currently does not work because we skip incorrect chars :p
          */
         this.lastIncorrectIndex = -1
-
-        // TODO deprecate this after we deprecate the old render method
-        this.textWidth = textWidth(' ') // the width of a space char
     }
 
 
     // renders this passage using vectors instead of constant offsets
-    vectorRender() {
+    render() {
         noStroke()
 
         let CHAR_POS = []
@@ -74,7 +69,7 @@ class Passage {
             }
 
 
-            /*  draw the current letter above the highlight box
+            /*  draw current letter above the highlight box in terms of z-index
              */
             fill(0, 0, 100, 70)
             text(this.text[i], cursor.x, cursor.y)
@@ -94,7 +89,6 @@ class Passage {
             // this is the horizontal coordinate where we must text wrap
             const LINE_WRAP_X_POS = width - RIGHT_MARGIN
 
-
             /*  if we're at a whitespace, determine if we need a new line:
                     find the next whitespace
                     the word between us and that whitespace is the next word
@@ -102,7 +96,7 @@ class Passage {
                      limit, then newline
              */
             if (this.text[i] === ' ') {
-                let ndi = this.text.indexOf(" ", i+1)
+                let ndi = this.text.indexOf(" ", i+1) // next delimiter index
                 let nextWord = this.text.substring(i+1, ndi)
 
                 if (textWidth(nextWord) +

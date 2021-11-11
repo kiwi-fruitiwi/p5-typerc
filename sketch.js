@@ -49,7 +49,7 @@ function preload() {
 
 
 function setup() {
-    createCanvas(640, 160)
+    createCanvas(640, 360)
     colorMode(HSB, 360, 100, 100, 100)
     textFont(font, 30)
 
@@ -65,7 +65,7 @@ function setup() {
 function draw() {
     background(234, 34, 24)
 
-    passage.vectorRender()
+    passage.render()
 }
 
 
