@@ -44,6 +44,7 @@ let incorrectSound // audio cue for typing one char incorrectly
 
 function preload() {
     font = loadFont('data/lucida-console.ttf')
+    // font = loadFont('data/Meiryo-01.ttf')
 }
 
 
@@ -66,6 +67,7 @@ function draw() {
 
     passage.vectorRender()
 }
+
 
 function keyPressed() {
     // if we're at the end of the passage, stop

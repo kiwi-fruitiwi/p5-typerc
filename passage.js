@@ -89,15 +89,31 @@ class Passage {
             /*  let's do a simple word wrap, wrapping just by character!
              */
 
+
             // this is the horizontal coordinate where we must text wrap
             const LINE_WRAP_X_POS = width - RIGHT_MARGIN
 
-            // do we exceed the line wrap limit? if so, next line!
-            if (textWidth(this.text[i]) + cursor.x > LINE_WRAP_X_POS) {
-                cursor.y += HIGHLIGHT_BOX_HEIGHT + 5
 
-                // don't forget to wrap the x coordinates! ᴖᴥᴖ
-                cursor.x = LEFT_MARGIN
+            /*  if we're at a whitespace, determine if we need a new line:
+                    find the next whitespace
+                    the word between us and that whitespace is the next word
+                    if the width of that word + our cursor + current space >
+                     limit, then newline
+             */
+            if (this.text[i] === ' ') {
+                let ndi = this.text.indexOf(" ", i+1)
+                let nextWord = this.text.substring(i+1, ndi)
+
+                if (textWidth(nextWord) +
+                    textWidth(this.text[i]) +
+                    cursor.x > LINE_WRAP_X_POS) {
+
+
+                    cursor.y += HIGHLIGHT_BOX_HEIGHT + 5
+
+                    // don't forget to wrap the x coordinates! ᴖᴥᴖ
+                    cursor.x = LEFT_MARGIN
+                }
             }
         }
 
@@ -140,78 +156,11 @@ class Passage {
             2)
     }
 
-    render() {
-        noStroke()
-        const H_OFFSET = 50
-        const CORRECT_HIGHLIGHT_HEIGHT = 34
-        const BELOW_FLOOR_CHAR_PADDING = 8 // for tails of p's, g's, y's, etc.
-        let V_OFFSET = 100
-
-        // display characters in passage and highlight for correct vs incorrect
-        for (let i=0; i < this.text.length; i++) {
-            fill(0, 0, 100, 70)
-
-            /*  TODO multi-line check
-                find next word. if that word's width plus our current pos.x
-                 is greater than our screen, V_OFFSET += line height
-
-             */
-
-            text(this.text[i], H_OFFSET+this.textWidth*i, V_OFFSET)
-
-            /* TODO correct / incorrect highlights */
-
-            /*  if we've typed up to the current char:
-                    display a green rect background if we typed it correctly
-                    otherwise display the red background
-             */
-            if (i < this.index) {
-                if (this.correctList[i])
-                    fill(94, 100, 90, 15)
-                else
-                    fill(0, 100, 100, 20)
-                rect( // negative height makes rectangle grow upward on screen
-                    H_OFFSET+this.textWidth*i+1,
-                    V_OFFSET+BELOW_FLOOR_CHAR_PADDING,
-                    this.textWidth-2,
-                    -CORRECT_HIGHLIGHT_HEIGHT,
-                    2) // rounded rectangle corners
-            } else {
-                // don't draw a rect background if we haven't typed up to
-                // this index
-            }
-        }
-
-
-        /* TODO display underline cursor for current character */
-        fill(0, 0, 100)
-        rect(
-            H_OFFSET+this.textWidth*this.index+1, V_OFFSET+10,
-            this.textWidth-2, 2,
-            2)
-
-
-        /* TODO line above current word (delimited by whitespace) */
-        // find index of next and previous whitespace chars
-        let nextDelimiterIndex = this.text.indexOf(" ", this.index)
-        let previousDelimiterIndex = this.text.lastIndexOf(" ", this.index)
-
-        // +1 because we don't want the line to go over the previous
-        // whitespace char
-        // fill(216, 100, 100, 50) // blue
-        fill(0, 0, 80, 30) // gray
-        rect(
-            H_OFFSET+this.textWidth*(previousDelimiterIndex+1)+1,
-            V_OFFSET+BELOW_FLOOR_CHAR_PADDING-CORRECT_HIGHLIGHT_HEIGHT-2,
-            this.textWidth*(nextDelimiterIndex-previousDelimiterIndex),
-            -2,
-            2)  // rounded rect corners
-
-    }
 
     getCurrentChar() {
         return this.text[this.index]
     }
+
 
     // set the current char to correct
     // TODO block on errors not supported
@@ -227,6 +176,7 @@ class Passage {
 
         console.assert(this.correctList.length === this.index)
     }
+
 
     // set the current char to be incorrect
     // TODO block on errors not supported
@@ -248,13 +198,16 @@ class Passage {
         }
     }
 
+
     decrementIndex() {
         this.index -= 1
     }
 
+
     incrementIndex() {
         this.index += 1
     }
+
 
     /*
         string representation of correct and incorrect chars
