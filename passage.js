@@ -36,6 +36,7 @@ class Passage {
         const RIGHT_MARGIN = LEFT_MARGIN
         const HIGHLIGHT_PADDING = 5
 
+
         // the bottom left corner of the current letter we are typing = cursor
         let cursor = new p5.Vector(LEFT_MARGIN, TOP_MARGIN)
 
@@ -116,7 +117,6 @@ class Passage {
                 }
             }
         }
-
 
 
         /*  add current word top highlight horizontal bar

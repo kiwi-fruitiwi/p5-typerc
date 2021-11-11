@@ -49,7 +49,7 @@ function preload() {
 
 
 function setup() {
-    createCanvas(640, 360)
+    createCanvas(640, 160)
     colorMode(HSB, 360, 100, 100, 100)
     textFont(font, 30)
 
@@ -74,8 +74,10 @@ function keyPressed() {
 
 
     // don't do anything if we detect SHIFT ALT CONTROL keycodes
-    // TODO what should we do about capslock? ಠ_ಠ
-    if (keyCode === SHIFT || keyCode === ALT || keyCode === CONTROL) {
+    if (keyCode === SHIFT ||
+        keyCode === ALT ||
+        keyCode === CONTROL ||
+        keyCode === 20) { // this is capslock
         return
     }
 
